@@ -1,0 +1,52 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>8c1346f9-5ba8-4cb1-9df9-5314bb3b0a37</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Abstraction\**" />
+    <Compile Remove="Application.IntegrationTests\**" />
+    <Compile Remove="Application.UnitTests\**" />
+    <Compile Remove="Application\**" />
+    <Compile Remove="Client\**" />
+    <Compile Remove="Cqrs\**" />
+    <Content Remove="Abstraction\**" />
+    <Content Remove="Application.IntegrationTests\**" />
+    <Content Remove="Application.UnitTests\**" />
+    <Content Remove="Application\**" />
+    <Content Remove="Client\**" />
+    <Content Remove="Cqrs\**" />
+    <EmbeddedResource Remove="Abstraction\**" />
+    <EmbeddedResource Remove="Application.IntegrationTests\**" />
+    <EmbeddedResource Remove="Application.UnitTests\**" />
+    <EmbeddedResource Remove="Application\**" />
+    <EmbeddedResource Remove="Client\**" />
+    <EmbeddedResource Remove="Cqrs\**" />
+    <None Remove="Abstraction\**" />
+    <None Remove="Application.IntegrationTests\**" />
+    <None Remove="Application.UnitTests\**" />
+    <None Remove="Application\**" />
+    <None Remove="Client\**" />
+    <None Remove="Cqrs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.2" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="Abstraction\Client.Abstractions.csproj" />
+    <ProjectReference Include="Application\Application.csproj" />
+    <ProjectReference Include="Client\Client.csproj" />
+    <ProjectReference Include="Cqrs\Cqrs.csproj" />
+  </ItemGroup>
+
+</Project>
