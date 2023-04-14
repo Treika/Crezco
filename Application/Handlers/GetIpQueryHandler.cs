@@ -53,7 +53,7 @@ namespace Application.Handlers
                     string? content = apiResponse.Error.Content;
                     return Failure(HandlerStatus.Error, null!, content ?? string.Empty);
                 }
-                if (apiResponse.Content.Latitude == default && apiResponse.Content.Longitude == default && apiResponse.Content.IsEu == null)
+                if (apiResponse.Content.Latitude == 0 && apiResponse.Content.Longitude == 0 && apiResponse.Content.IsEu == null)
                 {
                     return Failure(HandlerStatus.NotFound, null!, Constants.NotFound(request.IpAddress));
                 }

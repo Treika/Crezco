@@ -181,8 +181,8 @@ namespace Application.IntegrationTests
 
 
         [TestCase("1.1.1.1", HandlerStatus.Success, "Los Angeles", -118.243683, 34.052231)]
-        [TestCase("999.999.999.999", HandlerStatus.Error, null, default, default)]
-        [TestCase("255.255.255.255", HandlerStatus.Success, "-", default, default)]
+        [TestCase("999.999.999.999", HandlerStatus.Error, null, 0, 0)]
+        [TestCase("255.255.255.255", HandlerStatus.Success, "-", 0, 0)]
         [TestCase("21.34.55.89", HandlerStatus.Success, "Columbus", -83.012772, 39.966381)]
         [TestCase("100.200.100.200", HandlerStatus.Success, "Bellevue", -122.153412, 47.561195)]
         public async Task GivenRequest_WhenRealApiCalled_ThenReturnsExpectedData(string ipAddress, HandlerStatus status, string city, double longitude, double latitude)
