@@ -1,5 +1,9 @@
-﻿using Abstraction;
+﻿using Application.Handlers;
+using Application.Interfaces;
+using Application.Queries;
 using AutoFixture;
+using Client.Abstraction;
+using Client.Abstractions.Models;
 using Cqrs.Handlers;
 using Cqrs.Model;
 using FluentAssertions;
@@ -7,6 +11,7 @@ using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using NUnit.Framework;
 using Refit;
+using System.Net;
 
 namespace Application.UnitTests
 {
@@ -18,6 +23,7 @@ namespace Application.UnitTests
         private IIpLookupApi _ipLookupApi = null!;
         private Fixture _fixture = null!;
         private IMemoryCache _cache = null!;
+        private IIpDataRepository _ipDataRepository = null!;
         private RefitSettings _refitSettings = null!;
 
         [SetUp]
@@ -25,8 +31,9 @@ namespace Application.UnitTests
         {
             _ipLookupApi = Substitute.For<IIpLookupApi>();
             _cache = Substitute.For<IMemoryCache>();
+            _ipDataRepository = Substitute.For<IIpDataRepository>();
             _cache.TryGetValue<IpData>(Arg.Any<string>(), out _).Returns(false);
-            _handler = new GetIpQueryHandler(_ipLookupApi, _cache);
+            _handler = new GetIpQueryHandler(_ipLookupApi, _cache, _ipDataRepository);
             _fixture = new Fixture();
             _refitSettings = new RefitSettings();
 
@@ -39,24 +46,32 @@ namespace Application.UnitTests
             var ipAddress = GenerateValidIpAddress();
             var query = new GetIpQuery(ipAddress);
             var ipData = _fixture.Create<IpData>();
-            var expected = new ApiResponse<IpData>(new HttpResponseMessage(System.Net.HttpStatusCode.OK), ipData, _refitSettings);
+            var expected = new ApiResponse<IpData>(new HttpResponseMessage(HttpStatusCode.OK), ipData, _refitSettings);
             _ipLookupApi.GetDataForIp(ipAddress).Returns(expected);
 
             // Act
             var response = await _handler.Handle(query, _cancellationToken);
 
             // Assert
+            response.Status.Should().Be(HandlerStatus.Success);
             response.Result.Should().BeEquivalentTo(ipData);
         }
 
         [Test]
-        public async Task GivenRequestWithInvalidIpAddress_WhenHandleCalled_ThenReturnsSuccess()
+        public async Task GivenRequestWithInvalidIpAddress_WhenHandleCalled_ThenReturnsBadRequest()
         {
             // Arrange
             var ipAddress = GenerateInvalidIpAddress();
             var query = new GetIpQuery(ipAddress);
-            var ipData = _fixture.Create<IpData>();
-            var expected = new ApiResponse<IpData>(new HttpResponseMessage(System.Net.HttpStatusCode.BadRequest), ipData, _refitSettings);
+            var message = new HttpResponseMessage
+            {
+                StatusCode = HttpStatusCode.BadRequest,
+                Content = _refitSettings.ContentSerializer.ToHttpContent(_fixture.Create<string>())
+            };
+
+            var exception = await ApiException.Create(null!, null!, message, _refitSettings);
+
+            var expected = new ApiResponse<IpData>(message, null, _refitSettings, exception);
             _ipLookupApi.GetDataForIp(ipAddress).Returns(expected);
 
             // Act
@@ -64,6 +79,8 @@ namespace Application.UnitTests
 
             // Assert
             response.Status.Should().Be(HandlerStatus.Error);
+            response.Result.Should().BeNull();
+            response.Message.Should().Be(exception.Content);
         }
 
         private string GenerateValidIpAddress()

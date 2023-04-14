@@ -4,7 +4,7 @@ namespace Service
 {
     public class QueryParams
     {
-        [RegularExpression("^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$")]
+        [RegularExpression("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$")]
         public string IpAddress { get; set; }
     }
 }

@@ -1,8 +1,7 @@
-using Abstraction;
-using Application;
+using Application.Queries;
+using Client.Abstractions.Models;
 using Cqrs.Handlers;
 using Microsoft.AspNetCore.Mvc;
-using Service;
 using System.Net.Mime;
 
 namespace Service.Controllers
@@ -11,13 +10,10 @@ namespace Service.Controllers
     [Route("[controller]")]
     public class IpLookupController : ControllerBase
     {
-        private readonly ILogger<IpLookupController> _logger;
-        private readonly IIpLookupApi _ipLookupApi;
-        private readonly IRequestHandler<GetIpQuery, IpData> _handler;
+        private readonly IRequestHandler<GetIpQuery, IpData> _handler = null!;
 
-        public IpLookupController(ILogger<IpLookupController> logger, IRequestHandler<GetIpQuery, IpData> handler)
+        public IpLookupController(IRequestHandler<GetIpQuery, IpData> handler)
         {
-            _logger = logger;
             _handler = handler;
         }
 

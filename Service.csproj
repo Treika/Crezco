@@ -16,24 +16,32 @@
     <Compile Remove="Application\**" />
     <Compile Remove="Client\**" />
     <Compile Remove="Cqrs\**" />
+    <Compile Remove="DataContracts\**" />
+    <Compile Remove="Data\**" />
     <Content Remove="Abstraction\**" />
     <Content Remove="Application.IntegrationTests\**" />
     <Content Remove="Application.UnitTests\**" />
     <Content Remove="Application\**" />
     <Content Remove="Client\**" />
     <Content Remove="Cqrs\**" />
+    <Content Remove="DataContracts\**" />
+    <Content Remove="Data\**" />
     <EmbeddedResource Remove="Abstraction\**" />
     <EmbeddedResource Remove="Application.IntegrationTests\**" />
     <EmbeddedResource Remove="Application.UnitTests\**" />
     <EmbeddedResource Remove="Application\**" />
     <EmbeddedResource Remove="Client\**" />
     <EmbeddedResource Remove="Cqrs\**" />
+    <EmbeddedResource Remove="DataContracts\**" />
+    <EmbeddedResource Remove="Data\**" />
     <None Remove="Abstraction\**" />
     <None Remove="Application.IntegrationTests\**" />
     <None Remove="Application.UnitTests\**" />
     <None Remove="Application\**" />
     <None Remove="Client\**" />
     <None Remove="Cqrs\**" />
+    <None Remove="DataContracts\**" />
+    <None Remove="Data\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -47,6 +55,7 @@
     <ProjectReference Include="Application\Application.csproj" />
     <ProjectReference Include="Client\Client.csproj" />
     <ProjectReference Include="Cqrs\Cqrs.csproj" />
+    <ProjectReference Include="Data\Data.csproj" />
   </ItemGroup>
 
 </Project>

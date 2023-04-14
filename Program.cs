@@ -1,17 +1,25 @@
 using Abstraction;
 using Application;
+using Data;
+using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Host.ConfigureAbstraction();
 builder.Host.ConfigureApplication();
-builder.Services.AddMemoryCache();
+builder.Host.ConfigureDatabase();
+
+builder.Services.AddMemoryCache(options =>
+{
+    options = new MemoryCacheOptions
+    {
+        ExpirationScanFrequency = TimeSpan.FromSeconds(30)
+    };
+});
 
 var app = builder.Build();
 
