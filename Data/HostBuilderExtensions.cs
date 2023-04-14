@@ -11,8 +11,8 @@ namespace Data
 
         hostBuilder.ConfigureServices((hostContext, services) =>
         {
-            // just a simple sql database, with more time this would have been a cloud hosted document db to better suit te data
-            // but for a demo, i kept it simple
+            // just a simple sql database, with more time this would have been a cloud hosted document db to better suit the data
+            // but for a demo, i kept it simple and ran on a local db
             services.AddDbContext<IpContext>(options =>
                 options.UseSqlServer(hostContext.Configuration.GetConnectionString("SqlConnectionString")));
         });
