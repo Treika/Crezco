@@ -1,24 +1,24 @@
-﻿using NUnit.Framework;
-using Refit;
-using Microsoft.Extensions.Caching.Memory;
-using NSubstitute;
-using Microsoft.EntityFrameworkCore;
-using Data;
-using Cqrs.Handlers;
-using Cqrs.Model;
-using FluentAssertions;
-using FluentAssertions.Execution;
-using AutoFixture;
-using System.Net;
+﻿using Abstraction;
+using Application.Handlers;
 using Application.Interfaces;
 using Application.Queries;
-using Application.Handlers;
-using Client.Abstractions.Models;
+using AutoFixture;
 using Client.Abstraction;
-using Microsoft.Extensions.Hosting;
-using Abstraction;
-using Microsoft.Extensions.DependencyInjection;
+using Client.Abstractions.Models;
+using Cqrs.Handlers;
+using Cqrs.Model;
+using Data;
+using FluentAssertions;
+using FluentAssertions.Execution;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using NSubstitute;
+using NUnit.Framework;
+using Refit;
+using System.Net;
 
 namespace Application.IntegrationTests
 {
@@ -158,8 +158,8 @@ namespace Application.IntegrationTests
             {
                 Ip = "255.255.255.255",
                 IsEu = null,
-                Longitude = default,
-                Latitude = default
+                Longitude = 0,
+                Latitude = 0
             };
             var expected = new ApiResponse<IpData>(new HttpResponseMessage(HttpStatusCode.OK), ipData, _refitSettings);
             _ipLookupApiMock.GetDataForIp(Arg.Any<string>()).Returns(expected);
@@ -182,7 +182,7 @@ namespace Application.IntegrationTests
 
         [TestCase("1.1.1.1", HandlerStatus.Success, "Los Angeles", -118.243683, 34.052231)]
         [TestCase("999.999.999.999", HandlerStatus.Error, null, 0, 0)]
-        [TestCase("255.255.255.255", HandlerStatus.Success, "-", 0, 0)]
+        [TestCase("255.255.255.255", HandlerStatus.NotFound, "-", 0, 0)]
         [TestCase("21.34.55.89", HandlerStatus.Success, "Columbus", -83.012772, 39.966381)]
         [TestCase("100.200.100.200", HandlerStatus.Success, "Bellevue", -122.153412, 47.561195)]
         public async Task GivenRequest_WhenRealApiCalled_ThenReturnsExpectedData(string ipAddress, HandlerStatus status, string city, double longitude, double latitude)
@@ -197,7 +197,7 @@ namespace Application.IntegrationTests
             using (new AssertionScope())
             {
                 data.Status.Should().Be(status);
-                if(status == HandlerStatus.Success)
+                if (status == HandlerStatus.Success)
                 {
                     data.Result.Should().NotBeNull();
                     data.Result.City.Should().Be(city);
